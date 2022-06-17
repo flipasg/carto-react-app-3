@@ -23,6 +23,7 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Divider, Typography } from '@material-ui/core';
+import { STORE_LAYER_NUMBER } from '../layers';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -45,16 +46,19 @@ export default function Stores() {
     );
 
     dispatch(addSource(storesSource));
-
-    dispatch(
-      addLayer({
-        id: STORES_LAYER_ID,
-        source: storesSource.id,
-      })
+    new Array(STORE_LAYER_NUMBER).fill(0).forEach((zero, index) =>
+      dispatch(
+        addLayer({
+          id: STORES_LAYER_ID + index,
+          source: storesSource.id,
+        })
+      )
     );
 
     return () => {
-      dispatch(removeLayer(STORES_LAYER_ID));
+      new Array(STORE_LAYER_NUMBER)
+        .fill(0)
+        .forEach((zero, index) => dispatch(removeLayer(STORES_LAYER_ID + index)));
       dispatch(removeSource(storesSource.id));
     };
   }, [dispatch]);

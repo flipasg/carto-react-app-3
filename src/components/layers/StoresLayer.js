@@ -23,27 +23,30 @@ const DATA = Object.entries(CATEGORY_COLORS).map((elem) => {
   return { color: elem[1], label: elem[0] };
 });
 
-const layerConfig = {
-  title: 'Store types',
-  visible: true,
-  legend: {
-    attr: 'storetype',
-    type: LEGEND_TYPES.CATEGORY,
-    labels: DATA.map((data) => data.label),
-    colors: DATA.map((data) => data.color),
-  },
-};
 
-export default function StoresLayer() {
+
+export default function StoresLayer(index) {
   const dispatch = useDispatch();
-  const { storesLayer } = useSelector((state) => state.carto.layers);
+  const { [STORES_LAYER_ID + index]: storesLayer } = useSelector(
+    (state) => state.carto.layers
+  );
   const source = useSelector((state) => selectSourceById(state, storesLayer?.source));
   const cartoLayerProps = useCartoLayerProps({ source });
-
+  const layerConfig = {
+    title: 'Store types ' + index,
+    visible: true,
+    legend: {
+      attr: 'storetype',
+      collapsed: true,
+      type: LEGEND_TYPES.CATEGORY,
+      labels: DATA.map((data) => data.label),
+      colors: DATA.map((data) => data.color),
+    },
+  };
   if (storesLayer && source) {
     return new CartoLayer({
       ...cartoLayerProps,
-      id: STORES_LAYER_ID,
+      id: STORES_LAYER_ID + index,
       stroked: true,
       pointRadiusUnits: 'pixels',
       lineWidthUnits: 'pixels',
@@ -61,7 +64,7 @@ export default function StoresLayer() {
       onDataLoad: (data) => {
         dispatch(
           updateLayer({
-            id: STORES_LAYER_ID,
+            id: STORES_LAYER_ID + index,
             layerAttributes: { ...layerConfig },
           })
         );

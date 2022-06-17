@@ -91,10 +91,13 @@ export default function MapContainer() {
       <Map layers={layers} />
       <Hidden xsDown>
         <ZoomControl className={classes.zoomControl} showCurrentZoom />
-        <FeatureSelectionWidget className={classes.drawingTool} />
+        {/* <FeatureSelectionWidget className={classes.drawingTool} /> */}
       </Hidden>
       {!isGmaps && <CartoLogoMap className={classes.cartoLogoMap} />}
-      <LegendWidget className={classes.legend} />
+      <LegendWidget
+        layerOrder={['storesLayer1', 'storesLayer0', 'storesLayer2', 'storesLayer1']}
+        className={classes.legend}
+      />
     </Grid>
   );
 }
